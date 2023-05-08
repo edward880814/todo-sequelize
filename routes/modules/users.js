@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const app = express();
+
 
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -52,6 +52,7 @@ app.post('/users/register', (req, res) => {
 
 
 app.get('/users/logout', (req, res) => {
-  res.send('logout')
+  req.logout()
+  res.redirect('/users/login')
 })
 module.exports = router
