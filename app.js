@@ -17,7 +17,12 @@ app.use(methodOverride('_method'))
 
 
 app.get('/', (req, res) => {
-  res.send('hello world')
+  return Todo.findAll({
+    raw: true,
+    nest: true
+  })
+    .then((todos) => { return res.render('index', { todos: todos }) })
+    .catch((error) => { return res.status(422).json(error) })
 })
 
 app.get('/users/login', (req, res) => {
@@ -40,9 +45,20 @@ app.post('/users/register', (req, res) => {
   }).then(user => res.redirect('/'))
 })
 
+//not sure put where
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.findByPk(id)
+    .then(todo => res.render('detail', { todo: todo.toJSON() }))
+    .catch(error => console.log(error))
+})
+
 app.get('/users/logout', (req, res) => {
   res.send('logout')
 })
+
+
+
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`)
 })
